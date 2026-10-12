@@ -1,1 +1,16 @@
-
+[
+    {
+        "name": "Tyler Flurer",
+        "age": "19",
+        "address": "1234 Sesami Street",
+        "email": "tmf5897@psu.edu",
+        "phone": "123-456-7891"
+    },
+    {
+        "name": "Zach Bryan",
+        "age": "23",
+        "address": "12221 sesami",
+        "email": "hisname@gmail.com",
+        "phone": "222-333-2019"
+    }
+]

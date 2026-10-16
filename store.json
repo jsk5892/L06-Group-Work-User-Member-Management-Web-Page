@@ -8,7 +8,7 @@
   },
 [
   {
-    "id": 2
+    "id": 2,
     "description":
     "category":
     "unit":
@@ -16,10 +16,12 @@
   },
 [
   {
-    "id": 3
+    "id": 3,
     "description": 
     "category": 
     "unit":
     "price":
   },
+
+]
 

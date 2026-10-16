@@ -1,6 +1,14 @@
 [
   {
-    "id": 
+    "id": 1,
+    "description": "Cyber Conference", 
+    "category": "IST",
+    "unit": "Ticket"
+    "price": 10
+  },
+[
+  {
+    "id": 2
     "description":
     "category":
     "unit":
@@ -8,17 +16,9 @@
   },
 [
   {
-    "id": 
-    "description":
-    "category":
-    "unit":
-    "price":
-  },
-[
-  {
-    "id": 
-    "description":
-    "category":
+    "id": 3
+    "description": 
+    "category": 
     "unit":
     "price":
   },

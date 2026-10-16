@@ -6,7 +6,7 @@
     "unit": 
     "price": 
   },
-[
+
   {
     "id": 2,
     "description":
@@ -14,14 +14,14 @@
     "unit":
     "price":
   },
-[
+
   {
     "id": 3,
     "description": 
     "category": 
     "unit":
     "price":
-  },
+  }
 
 ]
 

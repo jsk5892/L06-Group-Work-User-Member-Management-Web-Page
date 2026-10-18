@@ -9,18 +9,18 @@
 
   {
     "id": 2,
-    "description": 
-    "category":
-    "unit":
-    "price": 
+    "description": "Business Leadership Speaker",
+    "category": "Business",
+    "unit": "Ticket",
+    "price": 25
   },
 
   {
     "id": 3,
-    "description": 
-    "category": 
-    "unit":
-    "price":
+    "description": "Motivational Speaker",
+    "category": "Career",
+    "unit": "Ticket",
+    "price": 10
   }
 
 ]

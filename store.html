@@ -19,8 +19,85 @@
     </div>
   </div>
     </nav>
+
+<section class="container py-5 productManagement">
+  <h1 class="text-centered mb-3">Product Management</h1>
+  <h2 class="h4 mb-3">Add or Update Product</h2>
+  
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <div id="formMessage" class="alert d-none" role="status"></div>
+
+      <form id="productForm" novalidate>
+
+        <div class="row">
+
+          <div class="col-md-6 mb-3">
+            <label class="form-head">Product ID</label>
+            <input type="number" class="form-control" id="productId" name="id" min="1" step="1" required>
+          </div>
+
+          <div class="col-md-6 mb-3">
+                <label class="form-head">Description</label>
+                <input type="text" class="form-control" id="description" name="description" required>
+          </div>
+
+
+          <div class="col-md-6 mb-3">
+                <label class="form-label">Category</label>
+                <input type="text" class="form-control" id="category" name="category" required>
+          </div>
+
+
+          <div class="col-md-6 mb-3">
+            <label class="form-head">Unit of Measurement</label>
+            <input type="text" class="form-control" id="unitOfMeasurement" name="unitOfMeasurement" required>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-head">Price</label>
+            <input type="number" class="form-control" id="price" name="price" min="0" step="0.01" required>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-head">Additional Information</label>
+            <input type="text" class="form-control" id="additionalInfo" name="additionalInfo">
+          </div>
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <button type="submit" class="btn btn-primary">Add/Update Product</button>
+  </div>
+</section>
+
+
+<section class="container pb-5 productManagement"
+  <div class="card shadow-sm">
+    <h2 class="h4 mb-3">Available Products</h2>
+
+    <div class="mb-4">
+      <label class="form-label">Search for Products</label>
+      <input type="text" class="form-control" id="searchProducts" placeholder="Enter product ID, description, or category.">
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Product ID</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Unit of Measurement</th>
+          <th>Price</th>
+          <th>Additional Information</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
 <div>
-      <section id="product" class="container py-5">
+  <section id="product" class="container py-5">
     <div class="row justify-content-center">
       <div class="col-md-8 col-lg-6">
         <article class="card shadow-sm overflow-hidden">

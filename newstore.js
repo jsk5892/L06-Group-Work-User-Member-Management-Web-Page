@@ -1,14 +1,14 @@
-$('searchProduct').on(input', function() {
+$('searchProducts').on('input', function() {
   const term = $(this).val().trim().toLowerCase();
   if (term === '') {
       showProducts(products);
-return'
+return;
 }
-const matchs = $.grep(products, function(p) {
+const matches = $.grep(products, function(p) {
     return String(p.id) === term ||
         p.description.toLowerCase().includes(term) ||
         p.category.toLowerCase().includes(term);
   });
-  showProducts(matches):
+  showProducts(matches);
 });
 

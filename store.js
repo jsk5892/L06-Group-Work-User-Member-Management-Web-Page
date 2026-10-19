@@ -78,7 +78,7 @@ productForm.addEventListener('submit', function (event) {
 //show the products in the table
 function showProducts() {
     //Josh addition the line below
-    list = ist || products;
+    list = list || products;
     //clear the table first
     let rows = "";
     //loop through the products array and create a new row for each product

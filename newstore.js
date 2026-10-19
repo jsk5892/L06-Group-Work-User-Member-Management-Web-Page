@@ -1,4 +1,4 @@
-$('searchProducts').on('input', function() {
+$('#searchProducts').on('input', function() {
   const term = $(this).val().trim().toLowerCase();
   if (term === '') {
       showProducts(products);

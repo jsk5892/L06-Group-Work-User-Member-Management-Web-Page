@@ -76,7 +76,7 @@ productForm.addEventListener('submit', function (event) {
     }
 });
 //show the products in the table
-function showProducts() {
+function showProducts(list) {
     //Josh addition the line below
     list = list || products;
     //clear the table first

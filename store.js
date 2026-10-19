@@ -67,7 +67,12 @@ productForm.addEventListener('submit', function (event) {
             additionalInfo: infoValue
         };
         //add the new product to the end of the product list, save the list to local storage, and show the updated list in the table
-        products.push(newProduct);
+        const index = products.findIndex(function(p) {return p.id === newProduct.id; });
+        if (index >= 0) {
+            products[index] = newProduct;
+        } else {
+            products.push(newProduct);
+        }
         localStorage.setItem('products', JSON.stringify(products));
         console.log('Products stored as JSON:', JSON.stringify(products, null, "  "));
         showProducts();

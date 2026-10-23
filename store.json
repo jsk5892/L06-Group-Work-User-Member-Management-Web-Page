@@ -21,6 +21,14 @@
     "category": "Career",
     "unit": "Ticket",
     "price": 10
+  },
+
+  {
+    "id": 4,
+    "description": "Visual Demonstration",
+    "category": "Analytics",
+    "unit": "Ticket",
+    "price": 5
   }
 
 ]

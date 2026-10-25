@@ -89,7 +89,7 @@ function showProducts(list) {
     //loop through the products array and create a new row for each product
     for (let i = 0; i < list.length; i++) {
         //create a new row with the product's information and add it to the rows variable
-        rows += "<tr><td>" + list[i].id + "</td><td>" + list[i].description + "</td><td>" + list[i].category + "</td><td>" + list[i].unitOfMeasurement + "</td><td>" + list[i].price.toFixed(2) + "</td><td>" + list[i].additionalInfo + "</td></tr>";
+        rows += "<tr><td>" + list[i].id + "</td><td>" + list[i].description + "</td><td>" + list[i].category + "</td><td>" + list[i].unitOfMeasurement + "</td><td>" + list[i].price.toFixed(2) + "</td><td>" + list[i].additionalInfo + "</td><td><button class='btn btn-sm btn-primary addBtn' data-id='" +list[i].id + "'>Add</button> </td></tr>";
     }//set the innerHTML of the table body to the rows variable, which will display all the products in the table
     productsTable.innerHTML = rows;
 }

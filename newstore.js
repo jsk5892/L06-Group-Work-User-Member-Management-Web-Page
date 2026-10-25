@@ -38,8 +38,8 @@ const id = $(this).data('id');
   showCart();
 });
 
-$(document).on('click', 'removeBtn', function(){
-  const idex = $(this).data('index');
+$(document).on('click', '.removeBtn', function(){
+  const index = $(this).data('index');
   cart.splice(index,1);
   showCart();
 });
@@ -51,10 +51,10 @@ function showCart(){
   $.each(cart,function(i,item){
     rows += '<tr><td>' + item.id + '</td><td>' + item.description + '</td><td>' + item.price.toFixed(2) +
             '</td><td><button class="btn btn-sm btn-danger removeBtn" data-index="' + i + '">Remove</button></td></tr>';
-    total += price item.price;
+    total += item.price;
   });
-  $(#'cartTable').html(rows);
-  $(#'cartTotal').text(total.toFixed(2));
+  $('#cartTable').html(rows);
+  $('#cartTotal').text(total.toFixed(2));
 }
 
 

@@ -57,4 +57,40 @@ function showCart(){
   $(#'cartTotal').text(total.toFixed(2));
 }
 
+
+$("#checkoutBtn").on("click", function() {
+
+    if (cart.length === 0) {
+        alert("Your shopping cart is empty");
+        return;
+    }
+
+    let order = {
+        items: cart,
+        total: cart.reduce(function(sum, item) {
+            return sum + Number(item.price);
+        }, 0)
+    };
+
+    let jsonData = JSON.stringify(order);
+
+    console.log("Shopping cart JSON:");
+    console.log(jsonData);
+
+    $.ajax({
+        url: "/api/orders",
+        type: "POST",
+        contentType: "application/json",
+        data: jsonData,
+
+        success: function(response) {
+            alert("Order submitted");
+        },
+
+        error: function() {
+            console.log("Not connected");
+            alert("Unable to submit order");
+        }
+    });
+});
     

@@ -9,11 +9,11 @@ function saveCart(cart) {
 function showCart() {
   const cart = getCart();
   let rows = '';
-  let total = '0';
+  let total = 0;
 
   $.each(cart, function (i,item) {
-    rows += '<tr><td>' + item.id '</td><td>' + item.description + '</td><td>' item.price.toFixed(2) + '</td><td><button class="btn btn-sm btn-danger removeBtn" data-index"' + i + '">Remove</button></td></tr>';
-    total += item.price
+    rows += '<tr><td>' + item.id + '</td><td>' + item.description + '</td><td>' + item.price.toFixed(2) + '</td><td><button class="btn btn-sm btn-danger removeBtn" data-index="' + i + '">Remove</button></td></tr>';
+    total += item.price;
   });
 
   if (cart.length === 0) {
@@ -25,7 +25,7 @@ function showCart() {
 
 $(document).on('click', '.addBtn', function() {
   const id = Number($(this).data('id'));
-  const item = $.grep(products.find, function(p) { return p.id === id;})[0];
+  const item = $.grep(products, function(p) { return p.id === id;})[0];
   if (!item) return;
 
   const cart = getCart();
@@ -45,7 +45,7 @@ $(document).on('click', '#checkoutBtn', function (event) {
   event.preventDefault();
   const cart = getCart();
 
-  if (cart.length === 0 {
+  if (cart.length === 0) {
     alert('Your shopping cart is empty');
     return;
   }

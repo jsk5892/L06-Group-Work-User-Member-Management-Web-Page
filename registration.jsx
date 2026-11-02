@@ -61,7 +61,7 @@ function RegistrationForm() {
     setSubmitting(true);
 
     // send the registration to the API
-    fetch("put the json url here please", {
+    fetch("https://jsonplaceholder.typicode.com/posts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

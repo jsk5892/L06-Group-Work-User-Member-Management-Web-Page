@@ -16,8 +16,8 @@ function validateBilling() {
         return false;
     }
 
-    if (card.length !== 12 || isNaN(card)) {
-    alert("Number must be 12 digits");
+    if (card.length !== 16 || isNaN(card)) {
+    alert("Number must be 16 digits");
     return false;
     }
 

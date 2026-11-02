@@ -46,3 +46,11 @@ function validateBilling() {
 
     return false;
 }
+
+// run the billing check when the billing form is submitted
+const billingForm = document.getElementById("billingForm");
+
+billingForm.addEventListener("submit", function (event) {
+    event.preventDefault(); // stops the page from refreshing
+    validateBilling();
+});

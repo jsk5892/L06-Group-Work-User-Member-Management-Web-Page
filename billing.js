@@ -37,8 +37,8 @@ function validateBilling() {
         return false;
     }
 
-    if (security.length !== 6 || isNaN(security)) {
-    alert("Enter 6 digit security code");
+    if (security.length !== 3 || isNaN(security)) {
+    alert("Enter 3 digit security code");
     return false;
     }
 

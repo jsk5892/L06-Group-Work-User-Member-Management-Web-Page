@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Cyber Conference",
+    "price": 10,
+    "image": "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=500"
+  },
+  {
+    "id": 2,
+    "name": "Business Leadership Speaker",
+    "price": 25,
+    "image": "https://images.unsplash.com/photo-1561489396-888724a1543d?w=500"
+  },
+  {
+    "id": 3,
+    "name": "Motivational Speaker",
+    "price": 10,
+    "image": "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=500"
+  },
+  {
+    "id": 4,
+    "name": "Visual Demonstration",
+    "price": 5,
+    "image": "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=500"
+  }
+]

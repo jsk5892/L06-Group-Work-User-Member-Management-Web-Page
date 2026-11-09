@@ -26,15 +26,16 @@
     </nav>
     
     <div class="container">
-  <div id="registration-root"></div>
+
 </div>
 
 <section class="container pb-5">
     <div class="card shadow-sm">
         <div class="card-body p-4">
             <h2 class="h4 mb-3">Billing Information</h2>
+            <p class="fw-semibold">Order Total: $<span id="cartTotal">0.00</span></p>
 
-            <form id="billingForm">
+            <form id="billingForm" novalidate>
                 <div class="mb-3">
                     <label for="fullName" class="form-label">Full Name</label>
                     <input type="text" class="form-control" id="fullName">
@@ -57,7 +58,7 @@
 
                 <div class="mb-3">
                     <label for="securityCode" class="form-label">Security Code</label>
-                    <input type="text" class="form-control" id="securityCode" placeholder="6 digits">
+                    <input type="text" class="form-control" id="securityCode" placeholder="3 digits">
                 </div>
 
                 <button type="submit" class="btn btn-primary">Validate Billing</button>
@@ -68,4 +69,5 @@
 
 <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
 <script src="checkout.js"></script>
+<script src="billing.js"></script>
 </body>

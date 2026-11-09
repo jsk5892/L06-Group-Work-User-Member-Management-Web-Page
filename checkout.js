@@ -72,7 +72,7 @@ $(document).on('click', '#checkoutBtn', function (event) {
             alert("Unable to submit order");
         },
         complete: function () {
-          window.location.href = 'shipping.html';
+          window.location.href = 'cart.html';
         }
     });
 });

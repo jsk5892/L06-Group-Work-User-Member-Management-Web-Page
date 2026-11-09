@@ -69,7 +69,6 @@ $(document).on('click', '#checkoutBtn', function (event) {
 
         error: function() {
             console.log("Not connected");
-            alert("Unable to submit order");
         },
         complete: function () {
           window.location.href = 'cart.html';

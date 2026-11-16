@@ -1,0 +1,13 @@
+### get all returns
+GET http://localhost:3000/api/returns
+
+### update a return
+PUT http://localhost:3000/api/returns/6afa58d104751ddba2e6d98f
+Content-Type: application/json
+
+{
+  "status": "Approved"
+}
+
+### delete a return
+DELETE http://localhost:3000/api/returns/6afa58d104751ddba2e6d98f

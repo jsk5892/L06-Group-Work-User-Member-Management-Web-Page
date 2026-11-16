@@ -1,7 +1,27 @@
-// grab express so can make the server
+//grab express so can make the server
 const express = require("express");
-// make the app
+//grab mongoose so can talk to mongoDB
+const mongoose = require("mongoose");
+//grab schema from model.js
+const models = require("./models");
+//make the app
 const app = express();
+
+//connect to happyvalley database on computer
+async function connectDB(){
+   try {
+      await mongoose.connect("mongodb://127.0.0.1/happyvalley");
+      //shows in terminal when works
+      console.log("Connected to MongoDB");
+   }
+   catch (ex) {
+      //shows if mongodb isnt running
+      console.log("Couldnt connect to MongoDB " + ex.message);
+   }
+}
+
+//actually run the connect function
+connectDB();
 
 // let the browser load our html, css, and js files from this folder
 app.use(express.static("."));
@@ -20,110 +40,112 @@ const logRequest = function(req, res, next) {
 // turn on the logger
 app.use(logRequest);
 
-// lists to hold everything people send (clears when the server stops)
-let billingList = [];
-let returnList = [];
-let orderList = [];
+// ---------- Returns ----------
 
-// runs when the billing page sends billing info
-app.post("/api/billing", function(req, res) {
-   // the billing info that got sent
-   const billing = req.body;
-
-   // if name, address, or card is missing send back an error
-   if (!billing.fullName || !billing.address || !billing.cardNumber) {
-      res.status(400).json({ success: false, message: "Missing billing information" });
+// add a return
+app.post("/api/returns", async function(req, res) {
+   try {
+      const newReturn = new models.Return(req.body);
+      await newReturn.save();
+      res.status(201).json({ success: true, returnId: newReturn._id });
    }
-   else {
-      // build the billing object we're saving
-      const newBilling = {
-         // gives it an id like B1, B2, B3
-         billingId: "B" + (billingList.length + 1),
-         fullName: billing.fullName,
-         address: billing.address,
-         // only keep the last 4 digits of the card
-         card: "**** **** **** " + billing.cardNumber.substring(12),
-         expiration: billing.expiration,
-         // whats in the cart and the total
-         items: billing.items,
-         total: billing.total
-      };
-
-      // save it to the list
-      billingList.push(newBilling);
-      // print it in the terminal so can see it worked
-      console.log(newBilling);
-
-      // tell the page it worked and give back the id
-      res.json({ success: true, billingId: newBilling.billingId });
+   catch (ex) {
+      res.status(400).send(ex.message);
    }
 });
 
-// shows all the billing info we got so far
-app.get("/api/billing", function(req, res) {
-   res.json(billingList);
-});
-
-// runs when the returns page sends a return
-app.post("/api/returns", function(req, res) {
-   // the return info that got sent
-   const details = req.body;
-
-   // if product, reason, or condition is missing send back an error
-   if (!details.productName || !details.reason || !details.condition) {
-      res.status(400).json({ success: false, message: "Missing return information" });
+// get all returns
+app.get("/api/returns", async function(req, res) {
+   try {
+      const returns = await models.Return.find({});
+      res.json(returns);
    }
-   else {
-      // build the return object we're saving
-      const newReturn = {
-         // gives it an id like R1, R2, R3
-         returnId: "R" + (returnList.length + 1),
-         productId: details.productId,
-         productName: details.productName,
-         price: details.price,
-         reason: details.reason,
-         condition: details.condition,
-         // every new return starts as pending
-         status: "Pending"
-      };
-
-      // save it to the list
-      returnList.push(newReturn);
-      // print it in the terminal
-      console.log(newReturn);
-
-      // tell the page it worked and give back the id
-      res.json({ success: true, returnId: newReturn.returnId });
+   catch (ex) {
+      res.status(400).send(ex.message);
    }
 });
 
-// shows all the returns we got so far
-app.get("/api/returns", function(req, res) {
-   res.json(returnList);
+// update a return
+app.put("/api/returns/:id", async function(req, res) {
+   try {
+      await models.Return.updateOne({ _id: req.params.id }, req.body);
+      res.sendStatus(204);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
 });
 
-// runs when someone hits checkout on the cart
-app.post("/api/orders", function(req, res) {
-   // build the order object
-   const newOrder = {
-      // gives it an id like O1, O2, O3
-      orderId: "O" + (orderList.length + 1),
-      items: req.body.items,
-      total: req.body.total
-   };
-
-   // save it to the list
-   orderList.push(newOrder);
-   // print it in the terminal
-   console.log(newOrder);
-
-   // tell the page it worked
-   res.json({ success: true, orderId: newOrder.orderId });
+// delete a return
+app.delete("/api/returns/:id", async function(req, res) {
+   try {
+      await models.Return.deleteOne({ _id: req.params.id });
+      res.sendStatus(204);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
 });
 
-// shows all the orders we got so far
-app.get("/api/orders", function(req, res) {
-   res.json(orderList);
+// ---------- Billing ----------
+
+// add billing info
+app.post("/api/billing", async function(req, res) {
+   try {
+      const newBilling = new models.Billing(req.body);
+      await newBilling.save();
+      res.status(201).json(newBilling);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
+});
+
+// get all billing info
+app.get("/api/billing", async function(req, res) {
+   try {
+      const billing = await models.Billing.find({});
+      res.json(billing);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
+});
+
+// update billing info
+app.put("/api/billing/:id", async function(req, res) {
+   try {
+      await models.Billing.updateOne({ _id: req.params.id }, req.body);
+      res.sendStatus(204);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
+});
+
+// delete billing info
+app.delete("/api/billing/:id", async function(req, res) {
+   try {
+      await models.Billing.deleteOne({ _id: req.params.id });
+      res.sendStatus(204);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
+});
+
+// ---------- Shopping Cart ----------
+
+// save the cart when someone checks out
+app.post("/api/orders", async function(req, res) {
+   try {
+      const newCart = new models.Cart(req.body);
+      await newCart.save();
+      res.status(201).json(newCart);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
 });
 
 // start the server on port 3000

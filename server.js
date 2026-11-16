@@ -206,14 +206,9 @@ app.delete("/api/products/:id", async function(req, res) {
    }
 });
 
-// start the server on port 3000
-app.listen(3000, function() {
-   console.log("Listening on port 3000...");
-});
-
 // ---------- Shipping ----------
 
-app.post("/api/shipping', async function(req, res) {
+app.post("/api/shipping", async function(req, res) {
    try {
       const newShipping = new models.Shipping(req.body);
       await newShipping.save();
@@ -260,5 +255,8 @@ app.delete("/api/shipping/:id", async function(req, res) {
    }
 });
 
-
+// start the server on port 3000
+app.listen(3000, function() {
+   console.log("Listening on port 3000...");
+});
 

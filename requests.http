@@ -1,13 +1,27 @@
-### get all returns
-GET http://localhost:3000/api/returns
-
-### update a return
-PUT http://localhost:3000/api/returns/6afa58d104751ddba2e6d98f
+### add a product
+POST http://localhost:3000/api/products
 Content-Type: application/json
 
 {
-  "status": "Approved"
+  "name": "Cyber Conference",
+  "category": "IST",
+  "price": 10,
+  "description": "Cyber security conference ticket"
 }
 
-### delete a return
-DELETE http://localhost:3000/api/returns/6afa58d104751ddba2e6d98f
+### get all products
+GET http://localhost:3000/api/products
+
+### update a product
+PUT http://localhost:3000/api/products/6afa6044a814a97e3146fb44
+Content-Type: application/json
+
+{
+  "price": 12
+}
+
+### delete a product
+DELETE http://localhost:3000/api/products/PASTE_ID_HERE
+
+### get all carts
+GET http://localhost:3000/api/orders

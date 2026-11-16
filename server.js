@@ -148,6 +148,64 @@ app.post("/api/orders", async function(req, res) {
    }
 });
 
+// get all carts
+app.get("/api/orders", async function(req, res) {
+   try {
+      const carts = await models.Cart.find({});
+      res.json(carts);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
+});
+
+// ---------- Products ----------
+
+// add a product
+app.post("/api/products", async function(req, res) {
+   try {
+      const newProduct = new models.Product(req.body);
+      await newProduct.save();
+      res.status(201).json(newProduct);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
+});
+
+// get all products
+app.get("/api/products", async function(req, res) {
+   try {
+      const products = await models.Product.find({});
+      res.json(products);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
+});
+
+// update a product
+app.put("/api/products/:id", async function(req, res) {
+   try {
+      await models.Product.updateOne({ _id: req.params.id }, req.body);
+      res.sendStatus(204);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
+});
+
+// delete a product
+app.delete("/api/products/:id", async function(req, res) {
+   try {
+      await models.Product.deleteOne({ _id: req.params.id });
+      res.sendStatus(204);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
+});
+
 // start the server on port 3000
 app.listen(3000, function() {
    console.log("Listening on port 3000...");

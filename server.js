@@ -8,15 +8,14 @@ const models = require("./models");
 const app = express();
 
 //connect to happyvalley database on computer
+const MONGODB_URI = process.env.MONGODB || process.env.MONGODB_URI || "mongodb://127.0.0.1/happyvalley";
 async function connectDB(){
    try {
-      await mongoose.connect("mongodb://127.0.0.1/happyvalley");
-      //shows in terminal when works
+      await mongoose.connect(MONGODB_URI);
       console.log("Connected to MongoDB");
    }
    catch (ex) {
-      //shows if mongodb isnt running
-      console.log("Couldnt connect to MongoDB " + ex.message);
+      console.log("Couldn't connect to MongoDB " + ex.message);
    }
 }
 

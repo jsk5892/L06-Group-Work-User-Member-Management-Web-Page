@@ -1,90 +1,164 @@
+// get shopping cart from local storage
 function getCart() {
-  return JSON.parse(localStorage.getItem('cart')) || [];
+    let cart = JSON.parse(localStorage.getItem("cart"));
+
+    if (cart == null) {
+        cart = [];
+    }
+    return cart;
 }
 
+// save shopping cart to local storage
 function saveCart(cart) {
-  localStorage.setItem('cart',JSON.stringify(cart));
+    localStorage.setItem("cart", JSON.stringify(cart));
 }
 
+
+// display shopping cart
 function showCart() {
-  const cart = getCart();
-  let rows = '';
-  let total = 0;
+    const cart = getCart();
+    const table = document.getElementById("cartTable");
+    const totalElement = document.getElementById("cartTotal");
+    let total = 0;
 
-  $.each(cart, function (i,item) {
-    rows += '<tr><td>' + item.id + '</td><td>' + item.description + '</td><td>' + item.price.toFixed(2) + '</td><td><button class="btn btn-sm btn-danger removeBtn" data-index="' + i + '">Remove</button></td></tr>';
-    total += item.price;
-  });
+    for (let i = 0; i < cart.length; i++) {
+        total += Number(cart[i].price);
+    }
+    if (totalElement !== null) {
+        totalElement.textContent = total.toFixed(2);
+    }
+    if (table == null) {
+        return;
+    }
 
-  if (cart.length === 0) {
-    rows = '<tr><td colspan="4" class="text-center text-muted">Your cart is empty.</td></tr>';
-  }
-  $('#cartTable').html(rows);
-  $('#cartTotal').text(total.toFixed(2));
+    table.innerHTML = "";
+    if (cart.length == 0) {
+        const row = table.insertRow();
+        const cell = row.insertCell();
+
+        cell.colSpan = 4;
+        cell.textContent = "Your shopping cart is empty";
+    } else {
+        for (let i = 0; i < cart.length; i++) {
+            const row = table.insertRow();
+
+            row.insertCell().textContent = cart[i].id;
+            row.insertCell().textContent = cart[i].description;
+            row.insertCell().textContent = Number(cart[i].price).toFixed(2);
+
+            const buttonCell = row.insertCell();
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "btn btn-sm btn-danger removeBtn";
+            button.setAttribute("data-index", i);
+            button.textContent = "Remove";
+            buttonCell.appendChild(button);
+        }
+    }
 }
 
-$(document).on('click', '.addBtn', function() {
-  const id = Number($(this).data('id'));
-  const item = $.grep(products, function(p) { return p.id === id;})[0];
-  if (!item) return;
+// add product to cart
+$(document).on("click", ".addBtn", function() {
+    const mongoId = $(this).attr("data-id");
+    let selectedProduct = null;
 
-  const cart = getCart();
-  cart.push({ id: item.id, description: item.description, price: item.price });
-  saveCart(cart);
-  showCart();
-});
-
-$(document).on('click', '.removeBtn', function(){
-  const cart = getCart();
-  cart.splice(Number($(this).data('index')), 1);
-  saveCart(cart);
-  showCart();
-});
-
-$(document).on('click', '#checkoutBtn', function (event) {
-  event.preventDefault();
-  const cart = getCart();
-
-  if (cart.length === 0) {
-    alert('Your shopping cart is empty');
-    return;
-  }
-
-  const order = {
-    items: cart,
-    total: cart.reduce(function (sum, item) { return sum + Number(item.price); }, 0)
-  };
-  const jsonData = JSON.stringify(order);
-  console.log('Shopping cart JSON:', jsonData);
-  
-  $.ajax({
-        url: "/api/orders",
-        type: "POST",
-        contentType: "application/json",
-        data: jsonData,
-
-        success: function(response) {
-            alert("Order submitted");
-        },
-
-        error: function() {
-            console.log("Not connected");
-        },
-        complete: function () {
-          window.location.href = 'cart.html';
+    for (let i = 0; i < products.length; i++) {
+        if (products[i]._id == mongoId) {
+            selectedProduct = products[i];
+            break;
         }
-    });
+    }
+    if (selectedProduct == null) {
+        alert("Product not found.");
+        return;
+    }
+
+    const cart = getCart();
+    const newItem = {
+        _id: selectedProduct._id,
+        id: selectedProduct.id,
+        description: selectedProduct.description,
+        price: Number(selectedProduct.price)
+    };
+
+    cart.push(newItem);
+    saveCart(cart);
+    showCart();
 });
 
-$(showCart);
+// remove product from cart
+$(document).on("click", ".removeBtn", function() {
+    const index = Number($(this).attr("data-index"));
+    const cart = getCart();
+
+    cart.splice(index, 1);
+    saveCart(cart);
+    showCart();
+});
 
 
+// save checkout to mongoDB
+async function checkoutOrder(button) {
+    const cart = getCart();
+
+    if (cart.length == 0) {
+        alert("Your shopping cart is empty");
+        return;
+    }
+
+    let total = 0;
+    for (let i = 0; i < cart.length; i++) {
+        total += Number(cart[i].price);
+    }
+
+    const order = {
+        items: cart,
+        total: total
+    };
+    button.disabled = true;
+
+    try {
+        const response = await fetch("/api/orders", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(order)
+        });
+
+        if (!response.ok) {
+            throw new Error("Order could not be saved");
+        }
 
 
+        const savedOrder = await response.json();
+        console.log("Saved order:", savedOrder);
+        alert("Order saved successfully");
+
+        let nextPage = button.getAttribute("data-next");
 
 
+        if (nextPage == null) {
+            nextPage = "shipping.html";
+        }
+
+        window.location.href = nextPage;
+
+    } catch (error) {
+        console.log(error);
+        alert("Error saving order to mongoDB");
+        button.disabled = false;
+    }
+}
 
 
+// checkout button
+$(document).on("click", "#checkoutBtn", function(event) {
+    event.preventDefault();
+    checkoutOrder(this);
+});
 
-
-
+// display cart
+$(document).ready(function() {
+    showCart();
+});

@@ -1,32 +1,17 @@
-if (products.length === 0) {
-  $.getJSON('store.json', function(data) {
-    products = $.map(data, function(p) {
-      return {
-        id: p.id,
-        description: p.description,
-        category: p.category,
-        unitOfMeasurement: p.unit,
-        price: p.price,
-        additionalInfo: ''
-      };
-    });
-    localStorage.setItem('products', JSON.stringify(products));
-    showProducts();
-  });
+function applyProductSearch() {
+    const term = document.getElementById("searchProducts").value.trim().toLowerCase();
+    let matches = [];
+
+    for (let i = 0; i < products.length; i++) {
+        if (
+            String(products[i].id).includes(term) ||
+            products[i].description.toLowerCase().includes(term) ||
+            products[i].category.toLowerCase().includes(term)
+        ) {
+            matches.push(products[i]);
+        }
+    }
+    showProducts(matches);
 }
 
-$('#searchProducts').on('input', function() {
-  const term = $(this).val().trim().toLowerCase();
-  if (term === '') {
-      showProducts(products);
-      return;
-  }
-  const matches = $.grep(products, function(p) {
-    return String(p.id) === term ||
-        p.description.toLowerCase().includes(term) ||
-        p.category.toLowerCase().includes(term);
-  });
-  showProducts(matches);
-});
-
-
+document.getElementById("searchProducts").addEventListener("input", applyProductSearch);

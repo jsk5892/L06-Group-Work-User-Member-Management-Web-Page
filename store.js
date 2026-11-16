@@ -1,98 +1,175 @@
-//gabbing all the different elements and storing them as varuabkes
-
 //the whole form 
-const productForm = document.getElementById('productForm'); 
+const productForm = document.getElementById("productForm");
 
 //the text boxes that the user types in
-const idInput = document.getElementById('productId');
-const descriptionInput = document.getElementById('description');
-const categoryInput = document.getElementById('category');
-const unitInput = document.getElementById('unitOfMeasurement');
-const priceInput = document.getElementById('price');
-const infoInput = document.getElementById('additionalInfo');
+const idInput = document.getElementById("productId");
+const descriptionInput = document.getElementById("description");
+const categoryInput = document.getElementById("category");
+const unitInput = document.getElementById("unitOfMeasurement");
+const priceInput = document.getElementById("price");
+const infoInput = document.getElementById("additionalInfo");
 
 //the empty table body where the products will show up
-const productsTable = document.querySelector('tbody');
+const productsTable = document.querySelector("table tbody");
 
-//list of products
+// store products from mongoDB
 let products = [];
 
-//check if there are products in local storage and if so, load them 
-if (localStorage.getItem('products')) {
-    products = JSON.parse(localStorage.getItem('products'));
+// GET, load products from mongoDB
+async function loadProducts() {
+    try {
+        const response = await fetch("/api/products");
+        if (!response.ok) {
+            throw new Error("Could not load products");
+        }
+        products = await response.json();
+        showProducts();
+
+    } catch (error) {
+        console.error(error);
+        alert("Error loading products from MongoDB.");
+    }
 }
 
-//if button is clicked
-productForm.addEventListener('submit', function (event) {
-    event.preventDefault(); 
+// display products in the table
+function showProducts(list = products) {
+    productsTable.innerHTML = "";
+    for (const product of list) {
+        const row = productsTable.insertRow();
+        const values = [
+            product.id,
+            product.description,
+            product.category,
+            product.unitOfMeasurement,
+            product.price.toFixed(2),
+            product.additionalInfo
+        ];
+        for (const value of values) {
+            const cell = row.insertCell();
+            cell.textContent = value;
+        }
 
-    //get what the user typed into each box
-    const idValue = idInput.value.trim(); //trimming dow exta blank spaces with trim()
-    const descriptionValue = descriptionInput.value.trim();
-    const categoryValue = categoryInput.value.trim();
-    const unitValue = unitInput.value.trim();
-    const priceValue = priceInput.value.trim();
-    const infoValue = infoInput.value.trim();
+        // add to cart button
+        const actions = row.insertCell();
+        const addButton = document.createElement("button");
+        addButton.type = "button";
+        addButton.className = "btn btn-sm btn-primary addBtn me-2";
+        addButton.textContent = "Add";
+        addButton.dataset.id = product._id;
+        actions.appendChild(addButton);
+        // delete button
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "btn btn-sm btn-danger deleteProductBtn";
+        deleteButton.textContent = "Delete";
+        deleteButton.dataset.id = product._id;
+        actions.appendChild(deleteButton);
+    }
+}
 
-    //validation: checking all the inputs to make sure they are valid
-    let errors = '';
-    if (idValue === ''|| isNaN(idValue) || idValue < 1) {
-        errors += 'Product ID must be a number of 1 or greater\n';
-    }
-    if (descriptionValue === '') {
-        errors += 'Description is required.\n';
-    }
-    if (categoryValue === '') {
-        errors += 'Category is required.\n';
-    }
-    if (unitValue === '') {
-        errors += 'Unit of Measurement is required.\n';
-    }
-    if (priceValue === ''|| isNaN(priceValue) || priceValue < 0) {
-        errors += 'Price must be a number of 0 or more\n';
-    }
-    if (errors) {
-        alert(errors); //show the errors to the user
+// POST/PUT, Add or update products
+productForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+    const id = Number(idInput.value);
+    const description = descriptionInput.value.trim();
+    const category = categoryInput.value.trim();
+    const unit = unitInput.value.trim();
+    const price = Number(priceInput.value);
+    const info = infoInput.value.trim();
+
+
+    // Validate form inputs
+    if (!Number.isInteger(id) || id < 1 ||
+        description == "" ||
+        category == "" ||
+        unit == "" ||
+        priceInput.value.trim() == "" ||
+        !Number.isFinite(price) || price < 0) {
+
+        alert("Enter valid product info");
         return;
     }
-    else {
+    const newProduct = {
+        id: id,
+        name: description,
+        description: description,
+        category: category,
+        unitOfMeasurement: unit,
+        price: price,
+        additionalInfo: info
+    };
+    // look for product with matching ID
+    const existing = products.find(function(product) {
+        return product.id == id;
+    });
+    let url = "/api/products";
+    let method = "POST";
+    if (existing !== undefined) {
+        url = "/api/products/" + existing._id;
+        method = "PUT";
+    }
 
-        //if everything is valid, create a new product object and add it to the products array
-        const newProduct = {
-            id: parseInt(idValue),
-            description: descriptionValue,
-            category: categoryValue,
-            unitOfMeasurement: unitValue,
-            price: parseFloat(priceValue),
-            additionalInfo: infoValue
-        };
-        //add the new product to the end of the product list, save the list to local storage, and show the updated list in the table
-        const index = products.findIndex(function(p) {return p.id === newProduct.id; });
-        if (index >= 0) {
-            products[index] = newProduct;
-        } else {
-            products.push(newProduct);
+    try {
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newProduct)
+        });
+        if (!response.ok) {
+            throw new Error("Could not save product");
         }
-        localStorage.setItem('products', JSON.stringify(products));
-        console.log('Products stored as JSON:', JSON.stringify(products, null, "  "));
-        showProducts();
+
+        await loadProducts();
         productForm.reset();
-        alert("Product added!");
+        alert(existing ? "Product updated" : "Product added");
+    } catch (error) {
+        console.error(error);
+        alert("Error saving to MongoDB");
     }
 });
-//show the products in the table
-function showProducts(list) {
-    //Josh addition the line below
-    list = list || products;
-    //clear the table first
-    let rows = "";
-    //loop through the products array and create a new row for each product
-    for (let i = 0; i < list.length; i++) {
-        //create a new row with the product's information and add it to the rows variable
-        rows += "<tr><td>" + list[i].id + "</td><td>" + list[i].description + "</td><td>" + list[i].category + "</td><td>" + list[i].unitOfMeasurement + "</td><td>" + list[i].price.toFixed(2) + "</td><td>" + list[i].additionalInfo + "</td><td><button class='btn btn-sm btn-primary addBtn' data-id='" +list[i].id + "'>Add</button> </td></tr>";
-    }//set the innerHTML of the table body to the rows variable, which will display all the products in the table
-    productsTable.innerHTML = rows;
-}
 
-showProducts();
+// DELETE, remove product from mongoDB
+productsTable.addEventListener("click", async function(event) {
+    const button = event.target.closest(".deleteProductBtn");
+    if (!button) {
+        return;
+    }
 
+    const mongoId = button.dataset.id;
+    if (!confirm("Delete this product?")) {
+        return;
+    }
+    try {
+        const response = await fetch("/api/products/" + mongoId, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            throw new Error("Could not delete product");
+        }
+
+        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        let updatedCart = [];
+        for (let i = 0; i < cart.length; i++) {
+            if (cart[i]._id !== mongoId) {
+                updatedCart.push(cart[i]);
+            }
+        }
+
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+        await loadProducts();
+        if (typeof showCart == "function") {
+            showCart();
+        }
+
+        alert("Product deleted!");
+    } catch (error) {
+        console.error(error);
+        alert("Error deleting product from MongoDB");
+    }
+});
+
+// load products when page opens
+loadProducts();

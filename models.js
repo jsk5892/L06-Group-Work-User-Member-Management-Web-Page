@@ -7,10 +7,14 @@ const shopperSchema = new mongoose.Schema({
 });
 
 const productSchema = new mongoose.Schema({
+    id: Number,
     name: String,
     category: String,
     price: Number,
-    description: String
+    description: String,
+    unitOfMeasurement: String,
+    additionalInfo: String,
+    image: String
 });
 
 const cartSchema = new mongoose.Schema({

@@ -210,3 +210,55 @@ app.delete("/api/products/:id", async function(req, res) {
 app.listen(3000, function() {
    console.log("Listening on port 3000...");
 });
+
+// ---------- Shipping ----------
+
+app.post("/api/shipping', async function(req, res) {
+   try {
+      const newShipping = new models.Shipping(req.body);
+      await newShipping.save();
+      res.status(201).json(newShipping);
+   }
+   catch (ex) {
+      res.status(400).json({ error: ex.message });
+   }
+});
+
+// get all shipping
+app.get("/api/shipping", async function(req, res) {
+   try {
+      const shipping = await models.Shipping.find({}).sort({ createdAt: -1});
+      res.json(shipping);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
+});
+
+// update shipping info
+app.put("/api/shipping/:id", async function(req, res) {
+   try {
+      const updated = await models.Shipping.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+      if (updated == null) {
+         return res.status(404).json({ error: "Shipping record not found" });
+      }
+      res.json(updated);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
+});
+
+// delete shipping info
+app.delete("/api/shipping/:id", async function(req, res) {
+   try {
+      await models.Shipping.deleteOne({ _id: req.params.id });
+      res.sendStatus(204);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
+});
+
+
+

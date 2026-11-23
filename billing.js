@@ -61,6 +61,23 @@ function validateBilling() {
     return true;
 }
 
+async function saveBilling(button) {
+    const total = getOrderTotal();
+
+    if (total <= 0) {
+        alert("Your cart is empty. Add items in the Store before paying.");
+        return;
+    }
+
+    const billing = {
+        fullName: document.getElementByID("fullName").value.trim(),
+        address: document.getElementByID("address").value.trim(),
+        total: total,
+        status: "validated"
+    };
+
+    button.disabled = true; 
+
 // run the billing check when the billing form is submitted
 const billingForm = document.getElementById("billingForm");
 

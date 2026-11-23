@@ -303,6 +303,55 @@ app.delete("/api/shipping/:id", async function(req, res) {
    }
 });
 
+app.post("/api/shopper" , async function(req, res) {
+   try {
+      const newShopper = new models.Shopper(req.body);
+      await newShopper.save();
+      res.status(201).json(newShopper);
+   }
+
+   catch(ex) { 
+      res.status(400).send(ex.message);
+   }
+});
+
+app.get("/api/shopper", async function(req,res){
+   try{
+      const shoppers = await models.Shopper.find({}).select("-password");
+      res.json(shoppers);
+   }
+   catch (ex) { 
+      res.status(400).send(ex.message);
+   }
+});
+
+app.put("/api/shopper/:id", async function(req, res) {
+try { 
+   const result = await models.Shopper.updateOne({ _id: req.params.id }, req.body);
+   if (result.matchedCount === 0){
+      return res.sendStatus(404);
+      }
+   res.sendStatus(204);
+}
+catch (ex) {
+   res.status(400).send(ex.message);
+}
+});
+
+app.delete("/api/shopper/:id", async function(req, res) {
+   try { 
+      const result = await models.Shopper.deleteOne({ _id: req.params.id });
+      if (result.deletedCount === 0) { 
+         return res.sendStatus(404);
+      }
+      res.sendStatus(204);
+   }
+   catch(ex) { 
+      res.status(400).send(ex.message)
+   }
+});
+      
+
 // start the server on port 3000
 app.listen(3000, function() {
    console.log("Listening on port 3000...");

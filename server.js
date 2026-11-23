@@ -67,7 +67,10 @@ app.get("/api/returns", async function(req, res) {
 // update a return
 app.put("/api/returns/:id", async function(req, res) {
    try {
-      await models.Return.updateOne({ _id: req.params.id }, req.body);
+      const result = await models.Return.updateOne({ _id: req.params.id }, req.body);
+      if (result.matchedCount === 0) {
+         return res.sendStatus(404);
+      }
       res.sendStatus(204);
    }
    catch (ex) {
@@ -78,7 +81,10 @@ app.put("/api/returns/:id", async function(req, res) {
 // delete a return
 app.delete("/api/returns/:id", async function(req, res) {
    try {
-      await models.Return.deleteOne({ _id: req.params.id });
+      const result = await models.Return.deleteOne({ _id: req.params.id });
+      if (result.deletedCount === 0) {
+         return res.sendStatus(404);
+      }
       res.sendStatus(204);
    }
    catch (ex) {
@@ -114,7 +120,10 @@ app.get("/api/billing", async function(req, res) {
 // update billing info
 app.put("/api/billing/:id", async function(req, res) {
    try {
-      await models.Billing.updateOne({ _id: req.params.id }, req.body);
+      const result = await models.Billing.updateOne({ _id: req.params.id }, req.body);
+      if (result.matchedCount === 0) {
+         return res.sendStatus(404);
+      }
       res.sendStatus(204);
    }
    catch (ex) {
@@ -125,7 +134,10 @@ app.put("/api/billing/:id", async function(req, res) {
 // delete billing info
 app.delete("/api/billing/:id", async function(req, res) {
    try {
-      await models.Billing.deleteOne({ _id: req.params.id });
+      const result = await models.Billing.deleteOne({ _id: req.params.id });
+      if (result.deletedCount === 0) {
+         return res.sendStatus(404);
+      }
       res.sendStatus(204);
    }
    catch (ex) {
@@ -152,6 +164,34 @@ app.get("/api/orders", async function(req, res) {
    try {
       const carts = await models.Cart.find({});
       res.json(carts);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
+});
+
+// update a saved order
+app.put("/api/orders/:id", async function(req, res) {
+   try {
+      const result = await models.Cart.updateOne({ _id: req.params.id }, req.body);
+      if (result.matchedCount === 0) {
+         return res.sendStatus(404);
+      }
+      res.sendStatus(204);
+   }
+   catch (ex) {
+      res.status(400).send(ex.message);
+   }
+});
+
+// delete a saved order
+app.delete("/api/orders/:id", async function(req, res) {
+   try {
+      const result = await models.Cart.deleteOne({ _id: req.params.id });
+      if (result.deletedCount === 0) {
+         return res.sendStatus(404);
+      }
+      res.sendStatus(204);
    }
    catch (ex) {
       res.status(400).send(ex.message);
@@ -186,7 +226,10 @@ app.get("/api/products", async function(req, res) {
 // update a product
 app.put("/api/products/:id", async function(req, res) {
    try {
-      await models.Product.updateOne({ _id: req.params.id }, req.body);
+      const result = await models.Product.updateOne({ _id: req.params.id }, req.body);
+      if (result.matchedCount === 0) {
+         return res.sendStatus(404);
+      }
       res.sendStatus(204);
    }
    catch (ex) {
@@ -197,7 +240,10 @@ app.put("/api/products/:id", async function(req, res) {
 // delete a product
 app.delete("/api/products/:id", async function(req, res) {
    try {
-      await models.Product.deleteOne({ _id: req.params.id });
+      const result = await models.Product.deleteOne({ _id: req.params.id });
+      if (result.deletedCount === 0) {
+         return res.sendStatus(404);
+      }
       res.sendStatus(204);
    }
    catch (ex) {
@@ -246,7 +292,10 @@ app.put("/api/shipping/:id", async function(req, res) {
 // delete shipping info
 app.delete("/api/shipping/:id", async function(req, res) {
    try {
-      await models.Shipping.deleteOne({ _id: req.params.id });
+      const result = await models.Shipping.deleteOne({ _id: req.params.id });
+      if (result.deletedCount === 0) {
+         return res.sendStatus(404);
+      }
       res.sendStatus(204);
    }
    catch (ex) {

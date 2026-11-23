@@ -93,9 +93,9 @@ async function saveBilling(button) {
         const saved = await response.json();
         console.log("Saved billing to MongoDB:", saved);
 
-        alert("Billing information saved!");
+        document.getElementById("billingJson").textContent = JSON.stringify(saved, null, 2);
+        document.getElementByID("billingSaved").classList.remove("d-none");
         document.getElementById("billingForm").reset();
-        window.location.href = "shipping.html";
     }
     catch (error) {
         console.log("Billing save failed:", error);

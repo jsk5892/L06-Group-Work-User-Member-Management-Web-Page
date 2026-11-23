@@ -70,18 +70,47 @@ async function saveBilling(button) {
     }
 
     const billing = {
-        fullName: document.getElementByID("fullName").value.trim(),
-        address: document.getElementByID("address").value.trim(),
+        fullName: document.getElementById("fullName").value.trim(),
+        address: document.getElementById("address").value.trim(),
         total: total,
         status: "validated"
     };
 
     button.disabled = true; 
 
+    try {
+        const response = await fetch("/api/billing", {
+            method: "POST",
+            headers: { "Content-Type": "application/json " },
+            body: JSON.stringify(billing)
+        });
+
+        if (!response.ok) {
+            const message = await response.text();
+            throw new Error(message || "HTTP " + response.status);
+        }
+
+        const saved = await response.json();
+        console.log("Saved billing to MongoDB:", saved);
+
+        alert("Billing information saved!");
+        document.getElementById("billingForm").reset();
+        window.location.href = "shipping.html";
+    }
+    catch (error) {
+        console.log("Billing save failed:", error);
+        alert("Could not save billing information. Is the server running?");
+        button.disabled = false;
+    }
+}
+
 // run the billing check when the billing form is submitted
 const billingForm = document.getElementById("billingForm");
 
 billingForm.addEventListener("submit", function (event) {
     event.preventDefault(); // stops the page from refreshing
-    validateBilling();
+    
+    if (validateBilling()) {
+        saveBilling(billingForm.querySelector("button[type='submit']"));
+    }
 });

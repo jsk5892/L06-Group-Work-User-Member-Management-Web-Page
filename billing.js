@@ -1,8 +1,19 @@
+function getOrderTotal() {
+    let total = 0;
+    if (typeof getCart === "function") {
+        const cart = getCart();
+        for (let i = 0; i < cart.length; i++) {
+            total += Number(cart[i].price);
+        }
+    }
+    return total;
+}
+
 function validateBilling() {
 
     let name = document.getElementById("fullName").value.trim();
     let address = document.getElementById("address").value.trim();
-    let card = document.getElementById("cardNumber").value.trim();
+    let card = document.getElementById("cardNumber").value.replace(/\s/g, "");
     let expiration = document.getElementById("expiration").value.trim();
     let security = document.getElementById("securityCode").value.trim();
 
@@ -16,12 +27,12 @@ function validateBilling() {
         return false;
     }
 
-    if (card.length !== 16 || isNaN(card)) {
+    if (!/^\d{16}$/.test(card)) {
     alert("Number must be 16 digits");
     return false;
     }
 
-    if (expiration.length !== 5 || expiration.charAt(2) !== "/") {
+    if (!/^\d{2}\/\d{2}$/.test(expiration)) {
     alert("Enter expiration date");
     return false;
     }

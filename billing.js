@@ -42,20 +42,23 @@ function validateBilling() {
     let year = 2000 + Number(parts[1]);
     let today = new Date();
 
+    if (month < 1 || month > 12) {
+        alert("Expiration month must be 01 to 12");
+        return false;
+    }
+
     if (year < today.getFullYear() ||
         (year === today.getFullYear() && month < today.getMonth() + 1)) {
         alert("Card Expired");
         return false;
     }
 
-    if (security.length !== 3 || isNaN(security)) {
+    if (!/^\d{3}$/.test(security)) {
     alert("Enter 3 digit security code");
     return false;
     }
 
-    alert("Validated");
-
-    return false;
+    return true;
 }
 
 // run the billing check when the billing form is submitted

@@ -24,7 +24,9 @@ const cartSchema = new mongoose.Schema({
 });
 
 const returnSchema = new mongoose.Schema({
+    productId: Number,
     productName: String,
+    price: Number,
     reason: String,
     condition: String,
     status: String
